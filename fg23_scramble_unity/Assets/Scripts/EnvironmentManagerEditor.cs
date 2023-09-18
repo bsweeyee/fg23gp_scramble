@@ -11,36 +11,40 @@ using UnityEditor;
 
 [CustomEditor(typeof(EnvironmentManager))]
 public class EnvironmentManagerEditor : Editor
-{    
+{
     private float m_angle;
     private float m_normalizedDt;
     private float m_previousDT;
 
     void OnEnable()
     {
-                          
-    }    
+
+    }
 
 #if UNITY_EDITOR
     public override void OnInspectorGUI()
-    {        
+    {
         base.OnInspectorGUI();
         var em = serializedObject.targetObject.GetComponent<EnvironmentManager>();
         if (em == null) return;
 
         EditorGUILayout.LabelField("Preview Transform");
         m_previousDT = m_normalizedDt;
-        m_normalizedDt = EditorGUILayout.Slider(m_normalizedDt, 0, 1);        
-                
+        m_normalizedDt = EditorGUILayout.Slider(m_normalizedDt, 0, 1);
+
         if (!Application.isPlaying)
         {
             foreach(var ei in em.EnvironmentInstances)
-            {                
-                if (m_normalizedDt >= 0) 
-                {                                                        
-                    ei.Move(m_normalizedDt - m_previousDT, EnvironmentInstance.EMoveType.TARGET);                    
-                }            
+            {
+                if (m_normalizedDt >= 0)
+                {
+                    ei.Move(m_normalizedDt - m_previousDT, EnvironmentInstance.EMoveType.TARGET);
+                }
             }
+        }
+
+        if(GUILayout.Button("Reset initial")) {
+            em.SetInitial(Vector3.zero, Vector3.zero, Vector3.one);
         }
 
         if (GUILayout.Button("Randomise initial"))
@@ -49,11 +53,11 @@ public class EnvironmentManagerEditor : Editor
         }
 
         if (GUILayout.Button("Randomise target"))
-        {            
-            em.RandomiseTarget();            
-        }       
+        {
+            em.RandomiseTarget();
+        }
 
         SceneView.RepaintAll();
-    }    
+    }
 #endif
 }
