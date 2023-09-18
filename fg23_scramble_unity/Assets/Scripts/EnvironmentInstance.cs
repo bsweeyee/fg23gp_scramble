@@ -54,7 +54,7 @@ public class EnvironmentInstance : MonoBehaviour
 
     public Vector3 TargetWorldPosition
     {
-        get { return transform.parent.localToWorldMatrix * (m_targetLocalPosition + transform.parent.position); }
+        get { return transform.parent.localToWorldMatrix * (m_targetLocalPosition); }
     }
 
     public Quaternion TargetWorldRotation
@@ -72,9 +72,9 @@ public class EnvironmentInstance : MonoBehaviour
         get { return m_targetRotationAxis; }
     }
 
-    public Vector3 StartWorldPosition { get { return transform.parent.localToWorldMatrix * (m_startLocalPosition + transform.parent.position); } }
+    public Vector3 StartWorldPosition { get { return transform.parent.localToWorldMatrix * (m_startLocalPosition); } }
 
-    public Vector3 InitialWorldPosition { get { return transform.parent.localToWorldMatrix * (m_initialLocalPosition + transform.parent.position); } }
+    public Vector3 InitialWorldPosition { get { return transform.parent.localToWorldMatrix * (m_initialLocalPosition); } }
 
     public int Priority { get { return m_sortPriority; } set { m_sortPriority = value; } }
 
@@ -105,7 +105,7 @@ public class EnvironmentInstance : MonoBehaviour
     public void Initialize(EnvironmentManager em, int priority, bool isResetUID = false)
     {
         m_em = em;
-        m_initialLocalPosition = transform.parent.worldToLocalMatrix * (transform.localPosition + transform.parent.position);
+        m_initialLocalPosition = transform.parent.worldToLocalMatrix * (transform.localPosition);
         m_initialLocalRotation = transform.localRotation;
         m_initialScale = transform.localScale;
 
@@ -121,6 +121,7 @@ public class EnvironmentInstance : MonoBehaviour
 
         // TODO: check if id is unique in em
          if (isResetUID || string.IsNullOrEmpty(m_id)) m_id = Guid.NewGuid().ToString();
+        Debug.Log(ID + ": " + m_initialLocalPosition);
     }
 
     public void RandomiseTargetWorldPosition(Transform parent, Vector3 zone)
@@ -163,7 +164,7 @@ public class EnvironmentInstance : MonoBehaviour
 
     //    transform.position = new Vector3(rx, ry, rz);
        var initialPosition = new Vector3(rx, ry, rz);
-       m_initialLocalPosition = transform.parent.worldToLocalMatrix * (initialPosition + transform.parent.position);
+       m_initialLocalPosition = transform.parent.worldToLocalMatrix * (initialPosition);
        transform.localPosition = m_initialLocalPosition;
        //    Debug.Log("randomise initial: " + (m_startLocalPosition - transform.localPosition).magnitude);
     }
@@ -191,7 +192,7 @@ public class EnvironmentInstance : MonoBehaviour
     }
 
     public void SetInitialWorldPosition(Vector3 localPosition) {
-        m_initialLocalPosition = transform.parent.worldToLocalMatrix * (localPosition + transform.parent.position);
+        m_initialLocalPosition = transform.parent.worldToLocalMatrix * (localPosition);
         transform.localPosition = m_initialLocalPosition;
     }
 
@@ -245,7 +246,7 @@ public class EnvironmentInstance : MonoBehaviour
         transform.rotation = transform.parent.rotation * localRotation;
         // transform position
         var localPos = Vector3.Lerp(startPosition, targetPosition, m_accumulatedDt);
-        transform.position = transform.parent.localToWorldMatrix * (localPos + transform.parent.position);
+        transform.position = transform.parent.localToWorldMatrix * (localPos);
         // Debug.Log(ID + ", after: " + transform.position);
     }
 
