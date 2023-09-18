@@ -2,6 +2,10 @@
 #
 # Get latest from https://github.com/github/gitignore/blob/main/Unity.gitignore
 #
+Library/
+Logs/
+Temp/
+obj/
 /[Ll]ibrary/
 /[Tt]emp/
 /[Oo]bj/
@@ -70,3 +74,13 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+Peckkem/UserSettings/EditorUserSettings.asset
+Peckkem/UserSettings/EditorUserSettings.asset
+Peckkem/UserSettings/EditorUserSettings.asset
+Peckkem/Assets/0_Scenes/NJ/Tests/symbol.png
+Peckkem/Assets/0_Scenes/NJ/Tests/symbol.png.meta
+Peckkem/Assets/BeautifulSky/Panoramic/Materials/Sky_Anime_02_Day_a.mat
+Peckkem/ProjectSettings/ProjectSettings.asset
+Peckkem/UserSettings/EditorUserSettings.asset
+Peckkem/UserSettings/Layouts/CurrentMaximizeLayout.dwlt
+Peckkem/UserSettings/Layouts/default-2021.dwlt
