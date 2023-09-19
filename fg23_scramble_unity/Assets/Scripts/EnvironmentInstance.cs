@@ -53,8 +53,8 @@ public class EnvironmentInstance : MonoBehaviour
     }
 
     public Vector3 TargetWorldPosition
-    {
-        get { return transform.parent.localToWorldMatrix * m_targetWorldPosition; }
+    {        
+        get { return Matrix4x4.Rotate(transform.parent.rotation).MultiplyPoint3x4(m_targetWorldPosition); }
     }
 
     public Quaternion TargetWorldRotation
@@ -90,6 +90,24 @@ public class EnvironmentInstance : MonoBehaviour
         m_em.Populate(m_em.transform, 0, true);
         m_em.SortEnvironmentInstances();
     }
+
+    void Update()
+    {
+        if (!Application.isPlaying)
+        {            
+            if (m_accumulatedDt <= 0)
+            {                                   
+                m_initialWorldPosition = transform.position;        
+                m_initialLocalRotation = transform.localRotation;
+                m_initialScale = transform.localScale;
+
+                m_startWorldPosition = m_initialWorldPosition;
+                m_startLocalRotation = m_initialLocalRotation;
+                m_startScale = m_initialScale;
+            }
+        }
+    }
+
 
     public void Initialize(EnvironmentManager em, bool isResetUID = false)
     {
@@ -143,7 +161,7 @@ public class EnvironmentInstance : MonoBehaviour
         var ry = UnityEngine.Random.Range(min, max);
         var rz = UnityEngine.Random.Range(min, max);
 
-        var targetAxis = new Vector3(rx, ry, rz);
+        var targetAxis = new Vector3(rx, ry, rz);        
         var targetAngle = UnityEngine.Random.Range(0.0f, 360.0f);
 
         m_targetLocalRotation = transform.localRotation * Quaternion.AngleAxis(targetAngle, targetAxis.normalized);
@@ -165,8 +183,8 @@ public class EnvironmentInstance : MonoBehaviour
         var rz = UnityEngine.Random.Range(-zone.z/2, zone.z/2);
 
     //    transform.position = new Vector3(rx, ry, rz);
-       var initialWorldPosition = new Vector3(rx, ry, rz);
-       m_initialWorldPosition =  parent.transform.position + initialWorldPosition;
+       var initialWorldPosition = parent.transform.position + new Vector3(rx, ry, rz);
+       m_initialWorldPosition = initialWorldPosition;
        transform.position = m_initialWorldPosition;
        //    Debug.Log("randomise initial: " + (m_startLocalPosition - transform.localPosition).magnitude);
     }
@@ -177,11 +195,11 @@ public class EnvironmentInstance : MonoBehaviour
         var ry = UnityEngine.Random.Range(min, max);
         var rz = UnityEngine.Random.Range(min, max);
 
-        var targetAxis = new Vector3(rx, ry, rz);
+        var targetAxis = new Vector3(rx, ry, rz);        
         var targetAngle = UnityEngine.Random.Range(0.0f, 360.0f);
 
         m_initialLocalRotation = Quaternion.AngleAxis(targetAngle, targetAxis.normalized);
-        transform.rotation = m_initialLocalRotation;
+        transform.rotation = m_initialLocalRotation;        
     }
 
     public void RandomiseInitialScale(Transform parent, float min, float max)
@@ -201,11 +219,13 @@ public class EnvironmentInstance : MonoBehaviour
 
     public void SetInitialRotation(Vector3 euler) {
         m_initialLocalRotation = Quaternion.Euler(euler);
+        m_startLocalRotation = m_initialLocalRotation;
         transform.rotation = m_initialLocalRotation;
     }
 
     public void SetInitialScale(Vector3 scale) {
         m_initialScale = scale;
+        m_startScale = m_initialScale;
         transform.localScale = m_initialScale;
     }
 
@@ -219,7 +239,7 @@ public class EnvironmentInstance : MonoBehaviour
         {
             case EMoveType.TARGET:
                 startWorldPosition = m_startWorldPosition;
-                targetWorldPosition = m_targetWorldPosition;
+                targetWorldPosition = Matrix4x4.Rotate(transform.parent.rotation).MultiplyPoint3x4(m_targetWorldPosition);
 
                 startRotation = m_startLocalRotation;
                 targetRotation = m_targetLocalRotation;
@@ -228,7 +248,7 @@ public class EnvironmentInstance : MonoBehaviour
                 targetScale = m_targetLocalScale;
                 break;
             case EMoveType.INITIAL:
-                startWorldPosition = m_targetWorldPosition;
+                startWorldPosition = Matrix4x4.Rotate(transform.parent.rotation).MultiplyPoint3x4(m_targetWorldPosition);
                 targetWorldPosition = m_initialWorldPosition;
 
                 startRotation = m_targetLocalRotation;
@@ -239,20 +259,24 @@ public class EnvironmentInstance : MonoBehaviour
                 break;
         }
 
-        m_accumulatedDt += dt;
+        m_accumulatedDt += dt;        
 
-         // transform scale
-        var localScale = Vector3.Lerp(startScale, targetScale, m_accumulatedDt);
-        transform.localScale = localScale;
-        // transform rotation
-        var localRotation = Quaternion.Lerp(startRotation, targetRotation, m_accumulatedDt);
-        transform.rotation = transform.parent.rotation * localRotation;
-        // transform position
-        var worldPos = Vector3.Lerp(startWorldPosition, targetWorldPosition, m_accumulatedDt);            
-        // Debug.Log(ID + ": " + transform.position);
-        // transform.localPosition = localPos; 
-        transform.position = transform.parent.localToWorldMatrix * worldPos; // TODO: for some reason when adding in new nested item, parent localToWorld is wrong
-        // Debug.Log(ID + ", after: " + transform.position);
+        if (m_accumulatedDt > 0)
+        {            
+            // transform scale
+            var localScale = Vector3.Lerp(startScale, targetScale, m_accumulatedDt);
+            transform.localScale = localScale;
+            // transform rotation
+            var localRotation = Quaternion.Lerp(startRotation, targetRotation, m_accumulatedDt);
+            transform.rotation = transform.parent.rotation * localRotation;
+            // transform position
+            var worldPos = Vector3.Lerp(startWorldPosition, targetWorldPosition, m_accumulatedDt);                    
+            transform.position = worldPos;        
+        }
+        else
+        {
+            m_accumulatedDt = 0;
+        }
     }
 
     public void Realign(EMoveType moveType)
@@ -262,7 +286,7 @@ public class EnvironmentInstance : MonoBehaviour
         switch (moveType)
         {
             case EMoveType.TARGET:
-                m_startWorldPosition = m_targetWorldPosition;
+                m_startWorldPosition = Matrix4x4.Rotate(transform.parent.rotation).MultiplyPoint3x4(m_targetWorldPosition);
                 m_startLocalRotation = m_targetLocalRotation;
                 m_startScale = m_targetLocalScale;
                 break;
@@ -273,7 +297,7 @@ public class EnvironmentInstance : MonoBehaviour
                 break;
         }
 
-        transform.position = transform.parent.localToWorldMatrix * (m_startWorldPosition + transform.parent.position);
+        transform.position = m_startWorldPosition;
         transform.rotation = transform.parent.rotation * m_startLocalRotation;
         transform.localScale = m_startScale;
     }

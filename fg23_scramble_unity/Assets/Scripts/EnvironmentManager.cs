@@ -28,7 +28,7 @@ public class EnvironmentManager : MonoBehaviour
 
     [SerializeField] private Vector3 m_randomZone = new Vector3(10, 10, 10);
     [SerializeField] private Vector2 m_randomRotationRange = new Vector2(-1.0f, 1.0f);
-    [SerializeField] private Vector2 m_randomScaleRange = new Vector2(0.2f, 2.0f);
+    [SerializeField] private Vector2 m_randomScaleRange = new Vector2(1, 2.0f);
     [SerializeField] private float m_totalTravelTime = 5; // Time in Seconds
 
     [SerializeField] private EControlState m_currentState;
@@ -264,7 +264,7 @@ public class EnvironmentManager : MonoBehaviour
             // Gizmos.color = Color.green;
             // var tmat = Matrix4x4.TRS(eo.TargetWorldPosition, eo.TargetWorldRotation, new Vector3(debugNScaleX, debugNScaleY, debugNScaleZ));
             // Gizmos.matrix = transform.localToWorldMatrix * tmat;
-            // Gizmos.DrawWireCube(Vector3.zero, UnityEngine.Vector3.one * 0.15f );
+            // Gizmos.DrawWireCube(Vector3.zero, UnityEngine.Vector3.one * 0.15f );            
 
             // draw rotation disc and rotation axis
             if (IsDrawSelfRotationDisc)
