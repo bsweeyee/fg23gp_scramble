@@ -186,15 +186,6 @@ public class ScramblerHandler : MonoBehaviour
         if (m_environmentInstances.Contains(instance)) m_environmentInstances.Remove(instance);
     }
 
-    public void SetInitial(Vector3 worldPosition, Vector3 euler, Vector3 scale) {
-        foreach (var eo in m_environmentInstances)
-        {
-            eo.SetInitialWorldPosition(worldPosition);
-            eo.SetInitialRotation(euler);
-            eo.SetInitialScale(scale);
-        }
-    }
-
     public void RandomiseTarget()
     {
         // var sortedEnvironmentInstance = m_environmentInstances.OrderBy( x => x.Priority ).ToList();

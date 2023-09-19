@@ -211,24 +211,6 @@ public class ScramblerInstance : MonoBehaviour
         m_initialScale = targetScale;
     }
 
-    public void SetInitialWorldPosition(Vector3 worldPosition) {
-        m_initialWorldPosition = worldPosition;
-        m_startWorldPosition = m_initialWorldPosition;
-        transform.position = m_initialWorldPosition;
-    }
-
-    public void SetInitialRotation(Vector3 euler) {
-        m_initialLocalRotation = Quaternion.Euler(euler);
-        m_startLocalRotation = m_initialLocalRotation;
-        transform.rotation = m_initialLocalRotation;
-    }
-
-    public void SetInitialScale(Vector3 scale) {
-        m_initialScale = scale;
-        m_startScale = m_initialScale;
-        transform.localScale = m_initialScale;
-    }
-
     public void Move(float dt, EMoveType moveType)
     {
         Vector3 startWorldPosition = Vector3.zero, targetWorldPosition = Vector3.zero;

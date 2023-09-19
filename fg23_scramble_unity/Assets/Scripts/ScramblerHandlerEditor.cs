@@ -41,11 +41,7 @@ public class ScramblerHandlerEditor : Editor
                     ei.Move(m_normalizedDt - m_previousDT, ScramblerInstance.EMoveType.TARGET);
                 }
             }
-        }
-
-        if(GUILayout.Button("Reset initial")) {
-            em.SetInitial(em.transform.position, Vector3.zero, Vector3.one);
-        }
+        }        
 
         if (GUILayout.Button("Randomise initial"))
         {
