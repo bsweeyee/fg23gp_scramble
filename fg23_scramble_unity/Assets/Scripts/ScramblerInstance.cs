@@ -11,7 +11,7 @@ using UnityEngine.UIElements;
 
 [Serializable]
 [ExecuteInEditMode]
-public class EnvironmentInstance : MonoBehaviour
+public class ScramblerInstance : MonoBehaviour
 {
     public enum EMoveType
     {
@@ -38,7 +38,7 @@ public class EnvironmentInstance : MonoBehaviour
     [SerializeField] private Vector3 m_targetLocalScale = Vector3.one;
     [SerializeField] private Vector3 m_targetRotationAxis;
 
-    private EnvironmentManager m_em;
+    private ScramblerHandler m_em;
 
     private float m_accumulatedDt;
     private int m_sortPriority;
@@ -86,7 +86,7 @@ public class EnvironmentInstance : MonoBehaviour
 
     void OnTransformChildrenChanged()
     {
-        if (m_em == null) m_em = GameObject.FindAnyObjectByType<EnvironmentManager>(); // TODO: find a way to assign it without doing a find
+        if (m_em == null) m_em = GameObject.FindAnyObjectByType<ScramblerHandler>(); // TODO: find a way to assign it without doing a find
         m_em.Populate(m_em.transform, 0, true);
         m_em.SortEnvironmentInstances();
     }
@@ -109,7 +109,7 @@ public class EnvironmentInstance : MonoBehaviour
     }
 
 
-    public void Initialize(EnvironmentManager em, bool isResetUID = false)
+    public void Initialize(ScramblerHandler em, bool isResetUID = false)
     {
         m_em = em;
 
@@ -120,7 +120,7 @@ public class EnvironmentInstance : MonoBehaviour
         if (isResetUID || string.IsNullOrEmpty(m_id)) m_id = Guid.NewGuid().ToString();
     }
 
-    public void Initialize(EnvironmentManager em, int priority, bool isFromInstance, bool isResetUID = false)
+    public void Initialize(ScramblerHandler em, int priority, bool isFromInstance, bool isResetUID = false)
     {
         m_em = em;        
 

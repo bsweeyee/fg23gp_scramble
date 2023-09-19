@@ -22,9 +22,9 @@ public enum EControlState
 }
 
 [ExecuteInEditMode]
-public class EnvironmentManager : MonoBehaviour
+public class ScramblerHandler : MonoBehaviour
 {
-    [SerializeField] private List<EnvironmentInstance> m_environmentInstances;
+    [SerializeField] private List<ScramblerInstance> m_environmentInstances;
 
     [SerializeField] private Vector3 m_randomZone = new Vector3(10, 10, 10);
     [SerializeField] private Vector2 m_randomRotationRange = new Vector2(-1.0f, 1.0f);
@@ -33,7 +33,7 @@ public class EnvironmentManager : MonoBehaviour
 
     [SerializeField] private EControlState m_currentState;
 
-    public List<EnvironmentInstance> EnvironmentInstances
+    public List<ScramblerInstance> EnvironmentInstances
     {
         get { return m_environmentInstances; }
     }
@@ -60,13 +60,13 @@ public class EnvironmentManager : MonoBehaviour
                 case EControlState.STOP:
                     foreach(var ei in m_environmentInstances)
                     {
-                        ei.Realign(EnvironmentInstance.EMoveType.TARGET);
+                        ei.Realign(ScramblerInstance.EMoveType.TARGET);
                     }
                     break;
                 case EControlState.NONE:
                     foreach(var ei in m_environmentInstances)
                     {
-                        ei.Realign(EnvironmentInstance.EMoveType.INITIAL);
+                        ei.Realign(ScramblerInstance.EMoveType.INITIAL);
                     }
                     break;
             }
@@ -76,7 +76,7 @@ public class EnvironmentManager : MonoBehaviour
 
     void OnEnable()
     {
-        if (m_environmentInstances == null) m_environmentInstances = new List<EnvironmentInstance>();
+        if (m_environmentInstances == null) m_environmentInstances = new List<ScramblerInstance>();
         Populate(transform, 0);
         SortEnvironmentInstances();
         foreach(var ei in m_environmentInstances)
@@ -108,7 +108,7 @@ public class EnvironmentManager : MonoBehaviour
 
                         if (next > 1.0f) { stoppedItems++; continue; }
 
-                        ei.Move(next - previous, EnvironmentInstance.EMoveType.TARGET);
+                        ei.Move(next - previous, ScramblerInstance.EMoveType.TARGET);
                     }
                     if (stoppedItems >= m_environmentInstances.Count) CurrentState = EControlState.STOP;
                     break;
@@ -124,7 +124,7 @@ public class EnvironmentManager : MonoBehaviour
 
                         if (next > 1.0f) { stoppedItems++; continue; }
 
-                        ei.Move(next - previous, EnvironmentInstance.EMoveType.INITIAL);
+                        ei.Move(next - previous, ScramblerInstance.EMoveType.INITIAL);
                     }
                     if (stoppedItems >= m_environmentInstances.Count) CurrentState = EControlState.NONE;
                     break;
@@ -144,11 +144,11 @@ public class EnvironmentManager : MonoBehaviour
         for(int i=0; i<t.childCount; i++)
         {
             var childObj = t.GetChild(i);
-            var envInstance = childObj.GetComponent<EnvironmentInstance>();
+            var envInstance = childObj.GetComponent<ScramblerInstance>();
 
             if (envInstance == null)
             {
-                envInstance = childObj.AddComponent<EnvironmentInstance>();
+                envInstance = childObj.AddComponent<ScramblerInstance>();
                 envInstance.Initialize(this, priority, isFromInstance);
             }
             else
@@ -181,7 +181,7 @@ public class EnvironmentManager : MonoBehaviour
         }
     }
 
-    public void Remove(EnvironmentInstance instance)
+    public void Remove(ScramblerInstance instance)
     {
         if (m_environmentInstances.Contains(instance)) m_environmentInstances.Remove(instance);
     }
@@ -270,7 +270,7 @@ public class EnvironmentManager : MonoBehaviour
             if (IsDrawSelfRotationDisc)
             {
                 Handles.color = Color.magenta;
-                var rotationAxis = (eo.transform.parent.GetComponent<EnvironmentInstance>() != null) ? eo.transform.parent.rotation * eo.TargetRotationAxis : eo.TargetRotationAxis;
+                var rotationAxis = (eo.transform.parent.GetComponent<ScramblerInstance>() != null) ? eo.transform.parent.rotation * eo.TargetRotationAxis : eo.TargetRotationAxis;
                 Handles.DrawWireDisc(eo.transform.position, rotationAxis, 1.0f);
                 Gizmos.color = Color.magenta;
                 Gizmos.DrawLine(eo.transform.position, eo.transform.position + rotationAxis.normalized);
@@ -278,12 +278,12 @@ public class EnvironmentManager : MonoBehaviour
 
             if (IsDrawTarget)
             {
-                Gizmos.color = (eo.transform.parent.GetComponent<EnvironmentInstance>() == null) ? Color.white : new Color(1, 1, 1, 0.25f);
+                Gizmos.color = (eo.transform.parent.GetComponent<ScramblerInstance>() == null) ? Color.white : new Color(1, 1, 1, 0.25f);
                 Gizmos.DrawWireSphere(eo.TargetWorldPosition, 0.2f);
             }
             if (IsDrawTargetLine)
             {
-                Gizmos.color = (eo.transform.parent.GetComponent<EnvironmentInstance>() == null) ? Color.white : new Color(1, 1, 1, 0.25f);
+                Gizmos.color = (eo.transform.parent.GetComponent<ScramblerInstance>() == null) ? Color.white : new Color(1, 1, 1, 0.25f);
                 Gizmos.DrawLine(eo.transform.position, eo.TargetWorldPosition);
             }
 
@@ -292,7 +292,7 @@ public class EnvironmentManager : MonoBehaviour
             // draw green lines to location
             if (IsDrawParentLine)
             {
-                if (eo.transform.parent.GetComponent<EnvironmentInstance>() != null)
+                if (eo.transform.parent.GetComponent<ScramblerInstance>() != null)
                 {
                     Gizmos.color = Color.magenta;
                     Gizmos.DrawLine(eo.transform.position, eo.transform.parent.position);
@@ -302,14 +302,14 @@ public class EnvironmentManager : MonoBehaviour
             // draw debug line towards parent obeject
             Gizmos.color = Color.blue;
             Handles.color = new Color(1, 1, 1, 0.25f);
-            var parentEO = eo.transform.parent.GetComponent<EnvironmentInstance>();
+            var parentEO = eo.transform.parent.GetComponent<ScramblerInstance>();
             if (parentEO != null)
             {
-                var parentToChildDirection = eo.TargetWorldPosition - eo.transform.parent.GetComponent<EnvironmentInstance>().TargetWorldPosition;
+                var parentToChildDirection = eo.TargetWorldPosition - eo.transform.parent.GetComponent<ScramblerInstance>().TargetWorldPosition;
                 var ptcDotRotationAxis = Vector3.Dot(parentToChildDirection, parentEO.TargetRotationAxis.normalized); // project ptcDirection to target rotation axis to find magnitude
                 if (IsDrawTargetParentLine)
                 {
-                    Gizmos.DrawLine(eo.TargetWorldPosition, eo.transform.parent.GetComponent<EnvironmentInstance>().TargetWorldPosition);
+                    Gizmos.DrawLine(eo.TargetWorldPosition, eo.transform.parent.GetComponent<ScramblerInstance>().TargetWorldPosition);
                 }
                 if (IsDrawTargetRotationDisc)
                 {

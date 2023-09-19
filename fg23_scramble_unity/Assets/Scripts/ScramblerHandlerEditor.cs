@@ -9,8 +9,8 @@ using UnityEditor;
 #endif
 
 
-[CustomEditor(typeof(EnvironmentManager))]
-public class EnvironmentManagerEditor : Editor
+[CustomEditor(typeof(ScramblerHandler))]
+public class ScramblerHandlerEditor : Editor
 {
     private float m_angle;
     private float m_normalizedDt;
@@ -25,7 +25,7 @@ public class EnvironmentManagerEditor : Editor
     public override void OnInspectorGUI()
     {
         base.OnInspectorGUI();
-        var em = serializedObject.targetObject.GetComponent<EnvironmentManager>();
+        var em = serializedObject.targetObject.GetComponent<ScramblerHandler>();
         if (em == null) return;
 
         EditorGUILayout.LabelField("Preview Transform");
@@ -38,7 +38,7 @@ public class EnvironmentManagerEditor : Editor
             {
                 if (m_normalizedDt >= 0)
                 {
-                    ei.Move(m_normalizedDt - m_previousDT, EnvironmentInstance.EMoveType.TARGET);
+                    ei.Move(m_normalizedDt - m_previousDT, ScramblerInstance.EMoveType.TARGET);
                 }
             }
         }
