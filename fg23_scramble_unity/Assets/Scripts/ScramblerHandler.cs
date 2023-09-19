@@ -269,12 +269,12 @@ public class ScramblerHandler : MonoBehaviour
 
             if (IsDrawTarget)
             {
-                Gizmos.color = (eo.transform.parent.GetComponent<ScramblerInstance>() == null) ? Color.white : new Color(1, 1, 1, 0.25f);
+                Gizmos.color = (eo.transform.parent.GetComponent<ScramblerInstance>() == null) ? Color.white : new Color(1, 1, 1, 0.1f);
                 Gizmos.DrawWireSphere(eo.TargetWorldPosition, 0.2f);
             }
             if (IsDrawTargetLine)
             {
-                Gizmos.color = (eo.transform.parent.GetComponent<ScramblerInstance>() == null) ? Color.white : new Color(1, 1, 1, 0.25f);
+                Gizmos.color = (eo.transform.parent.GetComponent<ScramblerInstance>() == null) ? Color.white : new Color(1, 1, 1, 0.1f);
                 Gizmos.DrawLine(eo.transform.position, eo.TargetWorldPosition);
             }
 

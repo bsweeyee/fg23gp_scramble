@@ -243,7 +243,7 @@ public class ScramblerInstance : MonoBehaviour
 
         m_accumulatedDt += dt;        
 
-        if (m_accumulatedDt > 0)
+        if (m_accumulatedDt >= 0)
         {            
             // transform scale
             var localScale = Vector3.Lerp(startScale, targetScale, m_accumulatedDt);
@@ -253,7 +253,9 @@ public class ScramblerInstance : MonoBehaviour
             transform.rotation = transform.parent.rotation * localRotation;
             // transform position
             var worldPos = Vector3.Lerp(startWorldPosition, targetWorldPosition, m_accumulatedDt);                    
-            transform.position = worldPos;        
+            transform.position = worldPos;
+
+            if (m_accumulatedDt <= 0) m_accumulatedDt = 0;        
         }
         else
         {
