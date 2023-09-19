@@ -24,14 +24,14 @@ public enum EControlState
 [ExecuteInEditMode]
 public class ScramblerHandler : MonoBehaviour
 {
-    [SerializeField] private List<ScramblerInstance> m_environmentInstances;
 
     [SerializeField] private Vector3 m_randomZone = new Vector3(10, 10, 10);
     [SerializeField] private Vector2 m_randomRotationRange = new Vector2(-1.0f, 1.0f);
     [SerializeField] private Vector2 m_randomScaleRange = new Vector2(1, 2.0f);
     [SerializeField] private float m_totalTravelTime = 5; // Time in Seconds
 
-    [SerializeField] private EControlState m_currentState;
+    private EControlState m_currentState;
+    private List<ScramblerInstance> m_environmentInstances;
 
     public List<ScramblerInstance> EnvironmentInstances
     {
