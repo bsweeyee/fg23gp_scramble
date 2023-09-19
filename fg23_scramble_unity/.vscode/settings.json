@@ -51,5 +51,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "fg23_scramble.sln"
+    "dotnet.defaultSolution": "fg23_scramble_unity.sln"
 }

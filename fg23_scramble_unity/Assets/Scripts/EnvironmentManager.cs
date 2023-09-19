@@ -138,7 +138,7 @@ public class EnvironmentManager : MonoBehaviour
         SortEnvironmentInstances();
     }
 
-    public void Populate(Transform t, int priority)
+    public void Populate(Transform t, int priority, bool isFromInstance = false)
     {
         // TODO: make it more efficient by only adding the "new" item inside. don't have to loop through all child objects
         for(int i=0; i<t.childCount; i++)
@@ -149,7 +149,7 @@ public class EnvironmentManager : MonoBehaviour
             if (envInstance == null)
             {
                 envInstance = childObj.AddComponent<EnvironmentInstance>();
-                envInstance.Initialize(this, priority);
+                envInstance.Initialize(this, priority, isFromInstance);
             }
             else
             {
@@ -170,14 +170,14 @@ public class EnvironmentManager : MonoBehaviour
                     if (d != envInstance)
                     {
                         // Debug.Log("duplicate count >= 1");
-                        envInstance.Initialize(this, priority, true);
+                        envInstance.Initialize(this, priority, isFromInstance, true);
                         m_environmentInstances.Add(envInstance);
                     }
                 }
             }
 
             // TOOD: may need to recursively add objects
-            Populate(childObj, priority+1);
+            Populate(childObj, priority+1, isFromInstance);
         }
     }
 
@@ -186,10 +186,10 @@ public class EnvironmentManager : MonoBehaviour
         if (m_environmentInstances.Contains(instance)) m_environmentInstances.Remove(instance);
     }
 
-    public void SetInitial(Vector3 localPosition, Vector3 euler, Vector3 scale) {
+    public void SetInitial(Vector3 worldPosition, Vector3 euler, Vector3 scale) {
         foreach (var eo in m_environmentInstances)
         {
-            eo.SetInitialWorldPosition(localPosition);
+            eo.SetInitialWorldPosition(worldPosition);
             eo.SetInitialRotation(euler);
             eo.SetInitialScale(scale);
         }

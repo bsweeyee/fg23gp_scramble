@@ -44,7 +44,7 @@ public class EnvironmentManagerEditor : Editor
         }
 
         if(GUILayout.Button("Reset initial")) {
-            em.SetInitial(Vector3.zero, Vector3.zero, Vector3.one);
+            em.SetInitial(em.transform.position, Vector3.zero, Vector3.one);
         }
 
         if (GUILayout.Button("Randomise initial"))
