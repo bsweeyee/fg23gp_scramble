@@ -1,5 +1,7 @@
 # Scrambler
 
+![](https://github.com/bsweeyee/fg23gp_scramble/blob/main/scrambler_demo.gif)
+
 ## How to use
 1. Attach ScamberHandler Component to a gameobject.
 2. All child gameobjects will automatically be attached with ScramblerInstance
