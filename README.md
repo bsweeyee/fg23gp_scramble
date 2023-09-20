@@ -2,6 +2,10 @@
 
 ![](https://github.com/bsweeyee/fg23gp_scramble/blob/main/scrambler_demo.gif)
 
+## Scenes
+Test: A test scene with cube primitives
+SampleScene:  Default unity URP scene. Play scene and press Scramble and Revert button to play in runtime 
+
 ## How to use
 1. Attach ScamberHandler.cs Component to a gameobject.
 2. All child gameobjects will automatically be attached with ScramblerInstance.cs
