@@ -15,8 +15,8 @@ using UnityEditor;
  [System.Serializable]
 public enum EControlState
 {
-    NONE = 0,
-    STOP = 1,
+    STOP_REVERT = 0,
+    STOP_SCRAMBLE = 1,
     SCRAMBLE = 2,
     REVERT = 3
 }
@@ -57,13 +57,13 @@ public class ScramblerHandler : MonoBehaviour
                 case EControlState.SCRAMBLE:
                     RandomiseTarget();
                     break;
-                case EControlState.STOP:
+                case EControlState.STOP_SCRAMBLE:
                     foreach(var ei in m_environmentInstances)
                     {
                         ei.Realign(ScramblerInstance.EMoveType.TARGET);
                     }
                     break;
-                case EControlState.NONE:
+                case EControlState.STOP_REVERT:
                     foreach(var ei in m_environmentInstances)
                     {
                         ei.Realign(ScramblerInstance.EMoveType.INITIAL);
@@ -92,9 +92,9 @@ public class ScramblerHandler : MonoBehaviour
             var stoppedItems = 0;
             switch(CurrentState)
             {
-                case EControlState.NONE:
+                case EControlState.STOP_REVERT:
                     break;
-                case EControlState.STOP:
+                case EControlState.STOP_SCRAMBLE:
                     break;
                 case EControlState.SCRAMBLE:
                     foreach(var ei in m_environmentInstances)
@@ -110,7 +110,7 @@ public class ScramblerHandler : MonoBehaviour
 
                         ei.Move(next - previous, ScramblerInstance.EMoveType.TARGET);
                     }
-                    if (stoppedItems >= m_environmentInstances.Count) CurrentState = EControlState.STOP;
+                    if (stoppedItems >= m_environmentInstances.Count) CurrentState = EControlState.STOP_SCRAMBLE;
                     break;
                 case EControlState.REVERT:
                     foreach(var ei in m_environmentInstances)
@@ -126,7 +126,7 @@ public class ScramblerHandler : MonoBehaviour
 
                         ei.Move(next - previous, ScramblerInstance.EMoveType.INITIAL);
                     }
-                    if (stoppedItems >= m_environmentInstances.Count) CurrentState = EControlState.NONE;
+                    if (stoppedItems >= m_environmentInstances.Count) CurrentState = EControlState.STOP_REVERT;
                     break;
             }
         }
@@ -218,7 +218,7 @@ public class ScramblerHandler : MonoBehaviour
 
      public void SetState (int state)
     {
-        if (m_currentState == EControlState.NONE || m_currentState == EControlState.STOP)
+        if (m_currentState == EControlState.STOP_REVERT || m_currentState == EControlState.STOP_SCRAMBLE)
         {
             CurrentState = (EControlState) state;
         }
